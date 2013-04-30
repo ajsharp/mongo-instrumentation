@@ -2,7 +2,7 @@ require 'mongo'
 require 'mongo/instrumentation/logging'
 
 module MongoInstrumentation
-  class Configuration < Struct.new(:caller, :explain, :explain_threshold)
+  class Configuration < Struct.new(:caller, :explain_threshold)
     def explain?
       !!self[:explain_threshold]
     end
