@@ -28,6 +28,7 @@ class MongoInstrumentationTest < MiniTest::Unit::TestCase
   def test_caller_output
     MongoInstrumentation.configure do |config|
       config.caller = true
+      config.explain_threshold = 0
     end
 
     @widgets.count

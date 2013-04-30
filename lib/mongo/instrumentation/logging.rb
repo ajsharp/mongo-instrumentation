@@ -17,17 +17,17 @@ module Mongo
         msg << ".limit(#{payload[:limit]})" if payload[:limit]
         msg << ".sort(#{payload[:order]})"  if payload[:order]
 
-        if MongoInstrumentation.config.caller
-          # filter out gems and ruby stdlib
-          filtered_caller = caller.reject { |line| line =~ /gems|rubies|#{$0}|irb/ }.join("\n\t")
-          msg << "\n\tcaller=#{filtered_caller}"
-        end
-
         if name == :find && MongoInstrumentation.config.explain? && runtime >= MongoInstrumentation.config.explain_threshold
           # HACK: this is how we avoid getting stuck in an infinite loop
           # because this method gets called when we invoke the `explain` method
           Thread.current[:stack_depth] ||= 0
           Thread.current[:stack_depth] += 1
+
+          if MongoInstrumentation.config.caller && Thread.current[:stack_depth] < 2
+            # filter out gems and ruby stdlib
+            filtered_caller = caller.reject { |line| line =~ /gems|rubies|#{$0}|irb/ }.join("\n\t")
+            msg << "\n\tcaller=#{filtered_caller}"
+          end
 
           if respond_to?(:explain) && Thread.current[:stack_depth] < 2
             msg << "\n\texplain=#{MultiJson.encode(explain)}"
