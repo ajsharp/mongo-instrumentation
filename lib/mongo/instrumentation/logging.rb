@@ -30,7 +30,7 @@ module Mongo
           Thread.current[:stack_depth] += 1
 
           if respond_to?(:explain) && Thread.current[:stack_depth] < 2
-            msg << "\nexplain=#{explain}"
+            msg << "\n\texplain=#{MultiJson.encode(explain)}"
           end
           Thread.current[:stack_depth] -= 1
         end

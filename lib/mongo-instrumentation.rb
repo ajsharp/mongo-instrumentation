@@ -1,4 +1,5 @@
 require 'mongo'
+require 'multi_json'
 require 'mongo/instrumentation/logging'
 
 module MongoInstrumentation
